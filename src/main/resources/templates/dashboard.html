@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Dashboard</title>
+</head>
+<body>
+<h1>Dashboard (Authenticated)</h1>
+
+<p><a href="/">Home</a></p>
+
+<h2>Decoded principal info</h2>
+<pre th:text="${info}"></pre>
+
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Logout</button>
+</form>
+</body>
+</html>

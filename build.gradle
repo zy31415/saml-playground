@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.7'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+    // OpenSAML (used by spring-security-saml2-service-provider) is published here
+    maven { url "https://build.shibboleth.net/nexus/content/repositories/releases/" }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // SAML2 Service Provider support
+    implementation 'org.springframework.security:spring-security-saml2-service-provider'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
