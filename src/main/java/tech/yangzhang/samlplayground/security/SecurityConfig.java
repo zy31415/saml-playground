@@ -2,6 +2,7 @@ package tech.yangzhang.samlplayground.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -10,23 +11,23 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                // Basic route auth rules
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/css/**", "/error", "/saml2/**", "/login/**").permitAll()
-                        .anyRequest().authenticated()
-                )
+    SecurityFilterChain securityFilterChain(HttpSecurity http, Environment env) throws Exception {
+        boolean samlEnabled = env.containsProperty("IDP_METADATA_URI")
+                && env.getProperty("IDP_METADATA_URI") != null
+                && !env.getProperty("IDP_METADATA_URI").isBlank();
 
-                // Enable SAML2 login
-                .saml2Login(Customizer.withDefaults())
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("/", "/css/**", "/error").permitAll()
+                .anyRequest().authenticated()
+        );
 
-                // Enable SAML2 logout (we'll make it "real" SLO later)
-                .saml2Logout(Customizer.withDefaults())
-
-        // For local experimentation, keep CSRF enabled by default.
-        // If you later build custom POST endpoints, revisit CSRF.
-        ;
+        if (samlEnabled) {
+            http.saml2Login(Customizer.withDefaults())
+                    .saml2Logout(Customizer.withDefaults());
+        } else {
+            // Boot-friendly fallback: show 401 on /dashboard instead of crashing at startup
+            http.httpBasic(Customizer.withDefaults());
+        }
 
         return http.build();
     }

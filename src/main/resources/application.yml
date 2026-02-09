@@ -1,15 +1,2 @@
 server:
   port: 8080
-
-spring:
-  security:
-    saml2:
-      relyingparty:
-        registration:
-          keycloak:
-            # This is your SP entityId (what the IdP will know you as)
-            entity-id: "http://localhost:8080/saml2/service-provider-metadata/keycloak"
-
-            # Where to fetch IdP metadata (Keycloak will provide a URL for this)
-            assertingparty:
-              metadata-uri: "https://REPLACE_ME_WITH_IDP_METADATA_URL"

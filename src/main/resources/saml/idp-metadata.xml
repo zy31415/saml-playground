@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntityDescriptor
+        xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
+        entityID="urn:example:idp"
+        xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+
+    <IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol"
+                      WantAuthnRequestsSigned="false">
+
+        <!-- Replace this with a real signing cert when you have a real IdP -->
+        <KeyDescriptor use="signing">
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+                        MIIB...REPLACE_WITH_REAL_BASE64_CERT...IDAQAB
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </KeyDescriptor>
+
+        <!-- Replace with real IdP SSO endpoint -->
+        <SingleSignOnService
+                Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                Location="http://localhost:8081/realms/saml-playground/protocol/saml"/>
+
+    </IDPSSODescriptor>
+</EntityDescriptor>
